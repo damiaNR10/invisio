@@ -1,0 +1,12 @@
+.car {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px 88px;
+    grid-gap: 20px;
+    align-items: center;
+    padding: 15px 0;
+    margin: 5px 0;
+
+    &__year {
+        text-align: center;
+    }
+}
