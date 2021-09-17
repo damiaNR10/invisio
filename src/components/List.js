@@ -1,4 +1,5 @@
 import React from 'react';
+import CreateModal from './CreateModal';
 import Car from './Car';
 import Header from './Header';
 import { Alert } from 'react-bootstrap';
@@ -8,6 +9,11 @@ class List extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            markError: false,
+            modelError: false,
+            yearError: false,
+            error: false,
+            modalCreateVisibility: false,
             cars: [
                 {
                     id: 1,
@@ -37,17 +43,50 @@ class List extends React.Component {
         };
     }
 
+    // handleClose = () => setShow(false);
+    // handleShow = () => setShow(true);
+
+    hideCreateModal = () => {
+        this.setState({
+            modalCreateVisibility: false,
+        }); 
+    }
+
+    showCreateModal = () => {
+        this.setState({
+            modalCreateVisibility: true,
+        });
+    }
+
     onCreate = (car) => {
-        console.log('Create element');
+        car.model ? this.setState({modelError: false}) : this.setState({modelError: true});
+        car.mark ? this.setState({markError: false}) : this.setState({markError: true});
+        (car.year && car.year > 1950 && car.year < 2022) ? this.setState({yearError: false}) : this.setState({yearError: true});
+        if((!car.model || !car.mark || !car.year) || (car.year < 1950 || car.year > 2021)) {
+            this.setState({
+                error: true,
+            });
+        }
+        else {
+            const cars = [...this.state.cars];
+            cars.push(car);
+            this.setState({cars});
+            this.setState({
+                error: false,
+                modelError: false,
+                markError: false,
+                yearError: false,
+            });
+        }
     }
 
     onDelete = (car) => {
         const cars = [...this.state.cars];
-        cars.map((element, index) => {
-            if(car.id === element.id) {
-                cars.splice(index, 1);
-            }
-        });
+        cars.map((element, index) => car.id === element.id ? cars.splice(index, 1) : null
+            // if(car.id === element.id) {
+            //     cars.splice(index, 1);
+            // }
+        );
         this.setState({cars});
     }
 
@@ -64,11 +103,14 @@ class List extends React.Component {
                     <Alert variant="danger">
                         <Alert.Heading>Oh no! Cars list is empty!</Alert.Heading>
                         <p>
-                            You have to add new elements to Cars list asap!
+                            You have to add new elements to Cars list!
                         </p>
                     </Alert>
                 }
-                <button onClick = {this.onCreate} type="button" className="btn btn-primary btn-lg">Add car to list</button>
+                <button onClick = {this.showCreateModal} type="button" className="btn btn-primary btn-lg">Add car to list</button>
+                {
+                    this.state.modalCreateVisibility ? <CreateModal invalidModel = {this.state.modelError} invalidMark = {this.state.markError} invalidYear = {this.state.yearError} isInvalid = {this.state.error} onCreate = {this.onCreate} hideCreateModal = {this.hideCreateModal} /> : null
+                }
             </>
         );
     }
