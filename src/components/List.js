@@ -1,5 +1,6 @@
 import React from 'react';
 import CreateModal from './CreateModal';
+import UpdateModal from './UpdateModal';
 import Car from './Car';
 import Header from './Header';
 import { Alert } from 'react-bootstrap';
@@ -14,37 +15,39 @@ class List extends React.Component {
             yearError: false,
             error: false,
             modalCreateVisibility: false,
+            // modalUpdateVisibility: false,
             cars: [
                 {
                     id: 1,
                     mark: 'McLaren',
                     model: 'Elva',
-                    year: '2021'
+                    year: '2021',
+                    modalUpdateVisibility: false,
                 },
                 {
                     id: 2,
                     mark: 'Volkswagen',
                     model: 'Golf R',
-                    year: '2021'
+                    year: '2021',
+                    modalUpdateVisibility: false,
                 },
                 {
                     id: 3,
                     mark: 'Alfa Romeo',
                     model: 'Giulia',
-                    year: '2019'
+                    year: '2019',
+                    modalUpdateVisibility: false,
                 },
                 {
                     id: 4,
                     mark: 'Fiat',
                     model: '500',
-                    year: '2020'
+                    year: '2020',
+                    modalUpdateVisibility: false,
                 },
             ],
         };
     }
-
-    // handleClose = () => setShow(false);
-    // handleShow = () => setShow(true);
 
     hideCreateModal = () => {
         this.setState({
@@ -56,6 +59,24 @@ class List extends React.Component {
         this.setState({
             modalCreateVisibility: true,
         });
+    }
+
+    hideUpdateModal = () => {
+        const cars = this.state.cars;
+        cars.map((car, index) => car.modalUpdateVisibility = false);
+        this.setState({cars});
+        // this.setState({
+        //     modalUpdateVisibility: false,
+        // }); 
+    }
+
+    showUpdateModal = (carToUpdate) => {
+        const cars = this.state.cars;
+        cars.map((car, index) => car.id === carToUpdate.id ? car.modalUpdateVisibility = true : car.modalUpdateVisibility = false);
+        this.setState({cars});
+        // this.setState({
+        //     modalUpdateVisibility: true,
+        // });
     }
 
     onCreate = (car) => {
@@ -76,18 +97,20 @@ class List extends React.Component {
                 modelError: false,
                 markError: false,
                 yearError: false,
+                modalUpdateVisibility: false,
             });
         }
     }
 
     onDelete = (car) => {
         const cars = [...this.state.cars];
-        cars.map((element, index) => car.id === element.id ? cars.splice(index, 1) : null
-            // if(car.id === element.id) {
-            //     cars.splice(index, 1);
-            // }
-        );
+        cars.map((element, index) => car.id === element.id ? cars.splice(index, 1) : null);
         this.setState({cars});
+    }
+
+    onUpdate = (car) => {
+        //console.log(car);
+        this.showUpdateModal(car);
     }
 
     render() {
@@ -97,7 +120,9 @@ class List extends React.Component {
                 {
                     this.state.cars.length > 0 ? 
                     this.state.cars.map((car, index) => {
-                        return <Car onDelete={() => this.onDelete(car)} key = {car.id} mark = {car.mark} model = {car.model} year = {car.year} />
+                        return <Car 
+                        modalUpdateVisibility = {car.modalUpdateVisibility} onModalHide = {() => this.hideUpdateModal(car)} 
+                        onUpdate = {() => this.onUpdate(car)} onDelete={() => this.onDelete(car)} key = {car.id} mark = {car.mark} model = {car.model} year = {car.year} />
                     })
                     :
                     <Alert variant="danger">
@@ -109,8 +134,11 @@ class List extends React.Component {
                 }
                 <button onClick = {this.showCreateModal} type="button" className="btn btn-primary btn-lg">Add car to list</button>
                 {
-                    this.state.modalCreateVisibility ? <CreateModal invalidModel = {this.state.modelError} invalidMark = {this.state.markError} invalidYear = {this.state.yearError} isInvalid = {this.state.error} onCreate = {this.onCreate} hideCreateModal = {this.hideCreateModal} /> : null
+                    this.state.modalCreateVisibility ? <CreateModal invalidMark = {this.state.markError} invalidYear = {this.state.yearError} isInvalid = {this.state.error} onCreate = {this.onCreate} hideCreateModal = {this.hideCreateModal} /> : null
                 }
+                {/* {
+                    this.state.modalUpdateVisibility ? <UpdateModal invalidMark = {this.state.markError} invalidYear = {this.state.yearError} isInvalid = {this.state.error} onUpdate = {this.onUpdate} hideUpdateModal = {this.hideUpdateModal} /> : null
+                } */}
             </>
         );
     }

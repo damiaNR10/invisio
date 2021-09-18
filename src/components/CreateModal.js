@@ -48,7 +48,7 @@ class CreateModal extends React.Component {
 
     render() {
 
-        const { isInvalid, invalidModel, invalidMark, invalidYear } = this.props;
+        const { invalidModel, invalidMark, invalidYear } = this.props;
 
         return (
             <Modal size = "lg" fullscreen = "true" show = "true">
