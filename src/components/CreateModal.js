@@ -69,7 +69,7 @@ class CreateModal extends React.Component {
                                 <Form.Control onChange = {(event) => this.modelHandle(event)} isInvalid = {invalidModel} required type="text" placeholder="Model" />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Year</Form.Label>
+                                <Form.Label>Year (1950 - 2021)</Form.Label>
                                 <Form.Control onChange = {(event) => this.yearHandle(event)} isInvalid = {invalidYear} required type="number" min="1950" max="2021" placeholder="----" />
                             </Form.Group>
                         </Form>
