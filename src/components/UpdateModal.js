@@ -6,44 +6,64 @@ class UpdateModal extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.state = {
-        //     id: null,
-        //     mark: null,
-        //     model: null,
-        //     year: null,
-        // }
+        this.state = {
+            updatedMark: null,
+            updatedModel: null,
+            updatedYear: null,
+        }
     }
 
-    // markHandle = (event) => {
-    //     this.setState({
-    //         mark: event.target.value,
-    //     });
-    // }
+    componentDidMount() {
+        this.setState({
+            updatedMark: this.props.mark,
+            updatedModel: this.props.model,
+            updatedYear: this.props.year,
+        });
+    }
 
-    // modelHandle = (event) => {
-    //     this.setState({
-    //         model: event.target.value,
-    //     });
-    // }
+    markHandle = (event) => {
+        this.setState({
+            updatedMark: event.target.value,
+        });
+        console.log(this.state);
+    }
 
-    // yearHandle = (event) => {
-    //     this.setState({
-    //         year: event.target.value,
-    //     });
-    // }
+    modelHandle = (event) => {
+        this.setState({
+            updatedModel: event.target.value,
+        });
+        console.log(this.state);
+    }
+
+    yearHandle = (event) => {
+        this.setState({
+            updatedYear: event.target.value,
+        });
+        console.log(this.state);
+    }
 
     hideUpdateModal = () => {
-        this.props.onModalHide();
+        this.props.onHideUpdateModal();
     }
 
-    // handleSubmit = () => {
-    //     this.props.onCreate({
-    //         id: uuidv4(),
-    //         mark: this.state.mark,
-    //         model: this.state.model,
-    //         year: this.state.year,
-    //     });
-    // }
+    handleSubmit = () => {
+        // this.props.onCreate({
+        //     id: uuidv4(),
+        //     mark: this.state.mark,
+        //     model: this.state.model,
+        //     year: this.state.year,
+        // });
+        const updatedCar = {
+            mark: this.state.updatedMark,
+            model: this.state.updatedModel,
+            year: this.state.updatedYear,
+        }
+
+        //console.log(this.props.updateId);
+
+        this.props.onUpdate(this.props.updateId, updatedCar);
+        this.hideUpdateModal();
+    }
 
     render() {
 
@@ -60,7 +80,7 @@ class UpdateModal extends React.Component {
                         <Form>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Mark</Form.Label>
-                                <Form.Control defaultValue = {mark} onChange = {(event) => this.markHandle(event)} isInvalid = {invalidMark}required type="text" placeholder="Mark" />
+                                <Form.Control defaultValue = {mark} onChange = {(event) => this.markHandle(event)} isInvalid = {invalidMark} required type="text" placeholder="Mark" />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Model</Form.Label>

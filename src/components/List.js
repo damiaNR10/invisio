@@ -14,8 +14,8 @@ class List extends React.Component {
             modelError: false,
             yearError: false,
             error: false,
+            updateError: false,
             modalCreateVisibility: false,
-            // modalUpdateVisibility: false,
             cars: [
                 {
                     id: 1,
@@ -85,7 +85,7 @@ class List extends React.Component {
         (car.year && car.year > 1950 && car.year < 2022) ? this.setState({yearError: false}) : this.setState({yearError: true});
         if((!car.model || !car.mark || !car.year) || (car.year < 1950 || car.year > 2021)) {
             this.setState({
-                error: true,
+                updateError: true,
             });
         }
         else {
@@ -108,9 +108,25 @@ class List extends React.Component {
         this.setState({cars});
     }
 
-    onUpdate = (car) => {
-        //console.log(car);
-        this.showUpdateModal(car);
+    onUpdate = (idToUpdate, updatedCar) => {
+        console.log(idToUpdate);
+        console.log(updatedCar);
+        //this.showUpdateModal(car);
+        const cars = this.state.cars;
+        if((!updatedCar.model || !updatedCar.mark || !updatedCar.year) || (updatedCar.year < 1950 || updatedCar.year > 2021)) {
+            this.setState({
+                updateError: true,
+            });
+        }
+        cars.map((car, index) => {
+            // car.id === carToUpdate.id ? car.modalUpdateVisibility = true : car.modalUpdateVisibility = false
+            if(car.id === idToUpdate) {
+                car.mark = updatedCar.mark;
+                car.model = updatedCar.model;
+                car.year = updatedCar.year;
+            }
+        });
+        this.setState({cars});
     }
 
     render() {
@@ -121,8 +137,9 @@ class List extends React.Component {
                     this.state.cars.length > 0 ? 
                     this.state.cars.map((car, index) => {
                         return <Car 
+                        id = {car.id}
                         modalUpdateVisibility = {car.modalUpdateVisibility} onModalHide = {() => this.hideUpdateModal(car)} 
-                        onUpdate = {() => this.onUpdate(car)} onDelete={() => this.onDelete(car)} key = {car.id} mark = {car.mark} model = {car.model} year = {car.year} />
+                        onShowUpdateModal = {() => {this.showUpdateModal(car)}} onUpdate = {this.onUpdate} onDelete={() => this.onDelete(car)} key = {car.id} mark = {car.mark} model = {car.model} year = {car.year} />
                     })
                     :
                     <Alert variant="danger">
