@@ -3,7 +3,7 @@ import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 import Car from './Car';
 import Header from './Header';
-import { Alert } from 'react-bootstrap';
+import { Alert, Form } from 'react-bootstrap';
 
 class List extends React.Component {
 
@@ -43,6 +43,13 @@ class List extends React.Component {
                     mark: 'Fiat',
                     model: '500',
                     year: '2020',
+                    modalUpdateVisibility: false,
+                },
+                {
+                    id: 5,
+                    mark: 'Ford',
+                    model: 'Mustang',
+                    year: '1992',
                     modalUpdateVisibility: false,
                 },
             ],
@@ -111,7 +118,6 @@ class List extends React.Component {
     onUpdate = (idToUpdate, updatedCar) => {
         console.log(idToUpdate);
         console.log(updatedCar);
-        //this.showUpdateModal(car);
         const cars = this.state.cars;
         if((!updatedCar.model || !updatedCar.mark || !updatedCar.year) || (updatedCar.year < 1950 || updatedCar.year > 2021)) {
             this.setState({
@@ -119,7 +125,6 @@ class List extends React.Component {
             });
         }
         cars.map((car, index) => {
-            // car.id === carToUpdate.id ? car.modalUpdateVisibility = true : car.modalUpdateVisibility = false
             if(car.id === idToUpdate) {
                 car.mark = updatedCar.mark;
                 car.model = updatedCar.model;
@@ -129,10 +134,24 @@ class List extends React.Component {
         this.setState({cars});
     }
 
+    sort = (sortByField, order) => {
+        const cars = [...this.state.cars];
+        const temporaryCars = [...this.state.cars];
+        let sortJsonArray = require('sort-json-array');
+        sortJsonArray(cars, sortByField, order);
+        this.setState({cars});
+    }
+
     render() {
         return (
             <>
-                <Header />
+                <Form>
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                        <Form.Label>Search by model</Form.Label>
+                        <Form.Control placeholder="Model" />
+                    </Form.Group>
+                </Form>
+                <Header sort = {this.sort} />
                 {
                     this.state.cars.length > 0 ? 
                     this.state.cars.map((car, index) => {
