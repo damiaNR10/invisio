@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
-import { v4 as uuidv4 } from 'uuid';
 
 class UpdateModal extends React.Component {
 
@@ -10,6 +9,7 @@ class UpdateModal extends React.Component {
             updatedMark: null,
             updatedModel: null,
             updatedYear: null,
+            error: false,
         }
     }
 
@@ -25,21 +25,18 @@ class UpdateModal extends React.Component {
         this.setState({
             updatedMark: event.target.value,
         });
-        console.log(this.state);
     }
 
     modelHandle = (event) => {
         this.setState({
             updatedModel: event.target.value,
         });
-        console.log(this.state);
     }
 
     yearHandle = (event) => {
         this.setState({
             updatedYear: event.target.value,
         });
-        console.log(this.state);
     }
 
     hideUpdateModal = () => {
@@ -47,22 +44,19 @@ class UpdateModal extends React.Component {
     }
 
     handleSubmit = () => {
-        // this.props.onCreate({
-        //     id: uuidv4(),
-        //     mark: this.state.mark,
-        //     model: this.state.model,
-        //     year: this.state.year,
-        // });
-        const updatedCar = {
-            mark: this.state.updatedMark,
-            model: this.state.updatedModel,
-            year: this.state.updatedYear,
+        if(this.state.updatedMark && this.state.updatedMark && this.state.updatedMark) {
+            const updatedCar = {
+                mark: this.state.updatedMark,
+                model: this.state.updatedModel,
+                year: this.state.updatedYear,
+            }
+    
+            this.props.onUpdate(this.props.updateId, updatedCar);
+            this.setState({error: false});
+            this.hideUpdateModal();
+        } else {
+            this.setState({error: true});
         }
-
-        //console.log(this.props.updateId);
-
-        this.props.onUpdate(this.props.updateId, updatedCar);
-        this.hideUpdateModal();
     }
 
     render() {
@@ -90,6 +84,7 @@ class UpdateModal extends React.Component {
                                 <Form.Label>Year</Form.Label>
                                 <Form.Control defaultValue = {year} onChange = {(event) => this.yearHandle(event)} isInvalid = {invalidYear} required type="number" min="1950" max="2021" placeholder="----" />
                             </Form.Group>
+                            {this.state.error ? <p>You have to fill all fields! (Year must be between 1950 - 2021)</p> : null}
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>

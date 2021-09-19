@@ -43,6 +43,7 @@ class CreateModal extends React.Component {
             mark: this.state.mark,
             model: this.state.model,
             year: this.state.year,
+            visible: true,
         });
     }
 
